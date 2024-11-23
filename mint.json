@@ -26,25 +26,28 @@
   "theme": "prism",
   "layout": "topnav",
   "modeToggle": {
-    "default": "light", 
+    "default": "dark", 
     "isHidden": false
   },
   "topbarCtaButton": {
     "type": "github",
     "url": "https://github.com/bhavnicksm/chonkie"
   },
+  "codeBlock":{
+     "mode": "auto"
+  }, 
   "navigation": [
     {
       "group": "Getting Started",
       "pages": [
         "introduction",
-        "installation",
-        "quickstart"
+        "installation"
       ]
     },
     {
       "group": "Chunkers",
       "pages": [
+        "chunkers/overview",
         "chunkers/token-chunker",
         "chunkers/word-chunker",
         "chunkers/sentence-chunker",

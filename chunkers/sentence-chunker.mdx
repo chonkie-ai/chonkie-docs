@@ -1,4 +1,199 @@
 ---
-title: Sentence Chunker
-description: Split on sentence boundaries for natural text divisions
+title: 'SentenceChunker'
+description: 'Split text into chunks while preserving sentence boundaries'
+icon: 'align-left'
 ---
+
+# SentenceChunker
+
+The `SentenceChunker` splits text into chunks while preserving complete sentences, ensuring that each chunk maintains proper sentence boundaries and context.
+
+## Installation
+
+SentenceChunker is included in the base installation:
+
+```bash
+pip install chonkie
+```
+
+## Initialization
+
+```python
+from chonkie import SentenceChunker
+
+# Basic initialization with default parameters
+chunker = SentenceChunker(
+    tokenizer="gpt2",                # Supports string identifiers
+    chunk_size=512,                  # Maximum tokens per chunk
+    chunk_overlap=128,               # Overlap between chunks
+    min_sentences_per_chunk=1        # Minimum sentences in each chunk
+)
+
+# Using a custom tokenizer
+from tokenizers import Tokenizer
+custom_tokenizer = Tokenizer.from_pretrained("your-tokenizer")
+chunker = SentenceChunker(
+    tokenizer=custom_tokenizer,
+    chunk_size=512,
+    chunk_overlap=128,
+    min_sentences_per_chunk=2
+)
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `tokenizer` | `Union[str, tokenizers.Tokenizer, tiktoken.Encoding]` | `"gpt2"` | Tokenizer to use. Can be a string identifier or a tokenizer instance |
+| `chunk_size` | `int` | `512` | Maximum number of tokens per chunk |
+| `chunk_overlap` | `int` | `128` | Number of overlapping tokens between chunks |
+| `min_sentences_per_chunk` | `int` | `1` | Minimum number of sentences to include in each chunk |
+
+## Usage
+
+### Single Text Chunking
+
+```python
+text = """This is the first sentence. This is the second sentence. 
+And here's a third one with some additional context."""
+chunks = chunker.chunk(text)
+
+for chunk in chunks:
+    print(f"Chunk text: {chunk.text}")
+    print(f"Token count: {chunk.token_count}")
+    print(f"Number of sentences: {len(chunk.sentences)}")
+```
+
+### Batch Chunking
+
+```python
+texts = [
+    "First document. With multiple sentences.",
+    "Second document. Also with sentences. And more context."
+]
+batch_chunks = chunker.chunk_batch(texts)
+
+for doc_chunks in batch_chunks:
+    for chunk in doc_chunks:
+        print(f"Chunk: {chunk.text}")
+```
+
+### Using as a Callable
+
+```python
+# Single text
+chunks = chunker("First sentence. Second sentence.")
+
+# Multiple texts
+batch_chunks = chunker(["Text 1. More text.", "Text 2. More."])
+```
+
+## Supported Tokenizers
+
+SentenceChunker supports multiple tokenizer backends:
+
+- **TikToken** (Recommended)
+  ```python
+  import tiktoken
+  tokenizer = tiktoken.get_encoding("gpt2")
+  ```
+
+- **AutoTikTokenizer**
+  ```python
+  from autotiktokenizer import AutoTikTokenizer
+  tokenizer = AutoTikTokenizer.from_pretrained("gpt2")
+  ```
+
+- **Hugging Face Tokenizers**
+  ```python
+  from tokenizers import Tokenizer
+  tokenizer = Tokenizer.from_pretrained("gpt2")
+  ```
+
+- **Transformers**
+  ```python
+  from transformers import AutoTokenizer
+  tokenizer = AutoTokenizer.from_pretrained("gpt2")
+  ```
+
+## Return Type
+
+SentenceChunker returns chunks as `SentenceChunk` objects with additional sentence metadata:
+
+```python
+@dataclass
+class Sentence:
+    text: str           # The sentence text
+    start_index: int    # Starting position in original text
+    end_index: int      # Ending position in original text
+    token_count: int    # Number of tokens in sentence
+
+@dataclass
+class SentenceChunk(Chunk):
+    text: str           # The chunk text
+    start_index: int    # Starting position in original text
+    end_index: int      # Ending position in original text
+    token_count: int    # Number of tokens in chunk
+    sentences: List[Sentence]  # List of sentences in chunk
+```
+
+## Thread Safety
+
+SentenceChunker is thread-safe and can be reused across multiple calls without reinitialization. The chunker automatically utilizes multiple threads for batch processing to optimize performance.
+
+## Performance Notes
+
+- Efficient sentence boundary detection
+- Batch processing automatically utilizes available CPU cores
+- Pre-computed token counts improve chunking speed
+- Handles various sentence patterns and punctuation marks
+
+## Example: Advanced Usage
+
+```python
+# Initialize with custom settings for academic text
+chunker = SentenceChunker(
+    tokenizer="gpt2",
+    chunk_size=512,
+    chunk_overlap=128,
+    min_sentences_per_chunk=2  # Ensure context with multiple sentences
+)
+
+# Process academic text with citations
+text = """
+The study found significant results (Smith et al., 2023). 
+This supports previous findings in the field. However, 
+some limitations were noted by researchers. The impact 
+on future studies remains to be seen.
+"""
+
+chunks = chunker.chunk(text)
+for chunk in chunks:
+    print(f"Number of sentences: {len(chunk.sentences)}")
+    for sentence in chunk.sentences:
+        print(f"Sentence: {sentence.text}")
+```
+
+## Best Practices
+
+1. **Optimize Chunk Settings:**
+   - Set appropriate chunk sizes based on your model
+   - Consider sentence length when setting overlap
+   - Adjust min_sentences_per_chunk based on your needs
+   - Test with your specific content type
+
+2. **Handling Different Text Types:**
+   - Academic text: Consider higher min_sentences_per_chunk
+   - Dialogue: Be aware of quotation marks and speakers
+   - Lists: Handle numbered or bulleted sentences appropriately
+
+3. **Batch Processing:**
+   - Use `chunk_batch()` for multiple documents
+   - Monitor memory usage with large batches
+   - Adjust batch size based on available resources
+
+4. **Content Considerations:**
+   - Be mindful of abbreviations (e.g., "Dr.", "Mr.")
+   - Handle parenthetical citations appropriately
+   - Consider text preprocessing for special formats
+   - Test with representative samples of your data

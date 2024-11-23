@@ -28,65 +28,88 @@ Well, with chonkie you can! (chonkie boi is a gud boi)
 
 <CardGroup cols={2}>
   <Card
-    title="🚀 Lightning Fast"
-    icon="bolt"
-  >
-    Up to 33x faster than alternatives, with optimized multi-threading and smart caching
-  </Card>
-  <Card
-    title="🪶 Lightweight"
-    icon="feather"
-  >
-    Only 9.7MB base installation, with modular dependencies for what you actually need
-  </Card>
-  <Card
-    title="🎯 Feature Rich"
+    title="Feature-rich"
     icon="puzzle-piece"
   >
-    From simple token chunking to advanced semantic chunking, all your RAG needs covered
+    All the CHONKs you'd ever need for your RAG applications
   </Card>
   <Card
-    title="🧠 Smart Defaults"
-    icon="brain"
+    title="Easy to use"
+    icon="wand-magic-sparkles"
   >
-    Battle-tested parameters and intelligent chunking strategies out of the box
+    Install, Import, CHONK - it's that simple!
+  </Card>
+  <Card
+    title="Lightning Fast"
+    icon="bolt"
+  >
+    CHONK at the speed of light! zooooom
+  </Card>
+  <Card
+    title="Wide Support"
+    icon="globe"
+  >
+    Supports all your favorite tokenizer, model and API CHONKs
+  </Card>
+  <Card
+    title="Lightweight"
+    icon="feather"
+  >
+    No bloat, just CHONK - only 9.7MB base installation
+  </Card>
+  <Card
+    title="Cute Mascot"
+    icon="hippo"
+  >
+    psst it's a pygmy hippo btw! Moto Moto approved
   </Card>
 </CardGroup>
 
-## Choose Your Chunker
 
-Chonkie provides multiple chunking strategies to suit your specific needs.
+## Quick Start
 
-<CardGroup cols={2}>
-  <Card
-    title="Token Chunker"
-    icon="cut"
-    href="/chunkers/token-chunker"
-  >
-    Split text into fixed-size token chunks with customizable overlap
-  </Card>
-  <Card
-    title="Word Chunker"
-    icon="font"
-    href="/chunkers/word-chunker"
-  >
-    Maintain word boundaries while chunking for better readability
-  </Card>
-  <Card
-    title="Sentence Chunker"
-    icon="align-left"
-    href="/chunkers/sentence-chunker"
-  >
-    Split on sentence boundaries for natural text divisions
-  </Card>
-  <Card
-    title="Semantic Chunker"
-    icon="diagram-project"
-    href="/chunkers/semantic-chunker"
-  >
-    Group similar content together using embeddings-based similarity
-  </Card>
-</CardGroup>
+Get started with Chonkie in three simple steps:
+
+### Installation
+
+```bash
+pip install chonkie
+```
+
+Want more features? Install everything (not recommended for production):
+```bash
+pip install chonkie[all]
+```
+
+<Note>
+  Chonkie follows a special approach to dependencies, keeping the base installation lightweight while allowing you to add extra features as and when needed.
+  Please check the [Installation](/installation) page for more details.
+</Note>
+
+### Usage
+
+Here's a basic example to get you started:
+
+```python
+# First import the chunker you want from Chonkie 
+from chonkie import TokenChunker
+
+# Import your favorite tokenizer library
+# Also supports AutoTokenizers, TikToken and AutoTikTokenizer
+from tokenizers import Tokenizer 
+tokenizer = Tokenizer.from_pretrained("gpt2")
+
+# Initialize the chunker
+chunker = TokenChunker(tokenizer)
+
+# Chunk some text
+chunks = chunker("Woah! Chonkie, the chunking library is so cool! I love the tiny hippo hehe.")
+
+# Access chunks
+for chunk in chunks:
+    print(f"Chunk: {chunk.text}")
+    print(f"Tokens: {chunk.token_count}")
+```
 
 ## Get Started
 
@@ -120,5 +143,26 @@ Ready to start CHONKing? Here's how to get started:
     href="https://github.com/bhavnicksm/chonkie"
   >
     Star us on GitHub and contribute to the project
+  </Card>
+</CardGroup>
+
+## Documentation
+
+Ready to learn more about Chonkie?
+
+<CardGroup cols={2}>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/introduction"
+  >
+    Detailed documentation for all chunking strategies
+  </Card>
+  <Card
+    title="GitHub"
+    icon="github"
+    href="https://github.com/bhavnicksm/chonkie"
+  >
+    Star us on GitHub and contribute
   </Card>
 </CardGroup>
