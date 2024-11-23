@@ -1,29 +1,25 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
-  "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
-  },
-  "favicon": "/favicon.svg",
+  "name": "Chonkie",
+  "logo": "/logo/chonkie_logo_horizontal_large.png",
+  "favicon": "/favicon.png",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#7c6f64",
+    "light": "#928374",
+    "dark": "#504945",
+    "background": {
+      "dark": "#282828",
+      "light": "#faf6e3"
+    },
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#7c6f64",
+      "to": "#928374"
     }
   },
-  "topbarLinks": [
-    {
-      "name": "Support",
-      "url": "mailto:hi@mintlify.com"
-    }
-  ],
+  "theme": "prism",
   "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
+    "name": "GitHub",
+    "url": "https://github.com/bhavnicksm/chonkie"
   },
   "tabs": [
     {
@@ -31,61 +27,45 @@
       "url": "api-reference"
     }
   ],
-  "anchors": [
-    {
-      "name": "Documentation",
-      "icon": "book-open-cover",
-      "url": "https://mintlify.com/docs"
-    },
-    {
-      "name": "Community",
-      "icon": "slack",
-      "url": "https://mintlify.com/community"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://mintlify.com/blog"
-    }
-  ],
   "navigation": [
     {
-      "group": "Get Started",
+      "group": "Getting Started",
       "pages": [
         "introduction",
-        "quickstart",
-        "development"
+        "installation",
+        "quickstart"
       ]
     },
     {
-      "group": "Essentials",
+      "group": "Chunkers",
       "pages": [
-        "essentials/markdown",
-        "essentials/code",
-        "essentials/images",
-        "essentials/settings",
-        "essentials/navigation",
-        "essentials/reusable-snippets"
+        "chunkers/token-chunker",
+        "chunkers/word-chunker",
+        "chunkers/sentence-chunker",
+        "chunkers/semantic-chunker",
+        "chunkers/sdpm-chunker"
       ]
     },
     {
-      "group": "API Documentation",
+      "group": "API Reference",
       "pages": [
-        "api-reference/introduction"
+        "api-reference/chunk",
+        "api-reference/base-chunker",
+        "api-reference/embeddings"
       ]
     },
     {
-      "group": "Endpoint Examples",
+      "group": "Examples",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/delete"
+        "examples/basic-usage",
+        "examples/semantic-chunking",
+        "examples/batch-processing"
       ]
     }
   ],
   "footerSocials": {
-    "x": "https://x.com/mintlify",
-    "github": "https://github.com/mintlify",
-    "linkedin": "https://linkedin.com/company/mintlify"
+    "x": "https://x.com/BhavnickMinhas",
+    "github": "https://github.com/bhavnicksm/chonkie",
+    "linkedin": "https://www.linkedin.com/in/bhavnicksm"
   }
 }
