@@ -33,12 +33,6 @@
     "type": "github",
     "url": "https://github.com/bhavnicksm/chonkie"
   },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "navigation": [
     {
       "group": "Getting Started",
@@ -64,8 +58,21 @@
     "suggestEdit": true
   },
   "footerSocials": {
-    "x": "https://x.com/BhavnickMinhas",
     "github": "https://github.com/bhavnicksm/chonkie",
+    "x": "https://x.com/BhavnickMinhas",
     "linkedin": "https://www.linkedin.com/in/bhavnicksm"
+  }, 
+  "metadata": {
+    "og:site_map": "Chonkie Documentation",
+    "og:title": "Chonkie Documentation",
+    "og:description": "🦛 CHONK your text with Chonkie✨ - A no nonsense text chunking library for RAGs",
+    "og:url": "https://docs.chonkie.ai",
+    "og:image": "/images/chonkie_logo_white_bg.png",
+    "og:logo": "/logo/chonkie_logo_horizontal_large.png",
+    "article:publisher": "https://github.come/bhavnicksm",
+    "twitter:title": "Chonkie Documentation",
+    "twitter:description": "🦛 CHONK your text with Chonkie✨ - A no nonsense text chunking library for RAGS",
+    "twitter:site": "https://docs.chonkie.ai",
+    "twitter:image": "/images/chonkie_logo_white_bg.png"
   }
 }
