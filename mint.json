@@ -1,11 +1,15 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Chonkie",
-  "logo": "/logo/chonkie_logo_horizontal_large.png",
+  "logo": {
+    "light": "/logo/chonkie_logo_horizontal_large.png", 
+    "dark": "/logo/chonkie_logo_horizontal_large.png", 
+    "href": "/"
+  },
   "favicon": "/favicon.png",
   "colors": {
     "primary": "#7c6f64",
-    "light": "#928374",
+    "light": "#A86F60",
     "dark": "#504945",
     "background": {
       "dark": "#282828",
@@ -16,10 +20,19 @@
       "to": "#928374"
     }
   },
+  "background": {
+    "style": "grid"
+  },
   "theme": "prism",
+  "layout": "topnav",
+  "modeToggle": {
+    "default": "light", 
+    "isHidden": false
+  },
   "topbarCtaButton": {
     "name": "GitHub",
-    "url": "https://github.com/bhavnicksm/chonkie"
+    "url": "https://github.com/bhavnicksm/chonkie", 
+    "style": "roundedRectangle"
   },
   "tabs": [
     {
@@ -63,6 +76,10 @@
       ]
     }
   ],
+  "feedback": {
+    "thumbsRating": true,
+    "suggestEdit": true
+  },
   "footerSocials": {
     "x": "https://x.com/BhavnickMinhas",
     "github": "https://github.com/bhavnicksm/chonkie",

@@ -1,71 +1,116 @@
 ---
 title: Introduction
-description: 'Welcome to the home of your new documentation'
+description: The no-nonsense RAG chunking library that's lightweight, lightning-fast, and ready to CHONK your texts
 ---
 
 <img
   className="block dark:hidden"
   src="/images/chonkie_logo_br_transparent_bg.png"
-  alt="Hero Light"
+  alt="Chonkie Logo Light"
 />
 <img
   className="hidden dark:block"
   src="/images/chonkie_logo_br_transparent_bg.png"
-  alt="Hero Dark"
+  alt="Chonkie Logo Dark"
 />
 
-## Setting up
+## Why Chonkie?
 
-The first step to world-class documentation is setting up your editing environments.
+Tired of bloated libraries or feature-lacking solutions for your RAG chunking needs? Chonkie provides a perfect balance of features, performance, and simplicity.
 
-<CardGroup cols={2}>
+<CardGroup cols={1}>
   <Card
-    title="Edit Your Docs"
-    icon="pen-to-square"
-    href="https://mintlify.com/docs/quickstart"
+    title="🚀 Lightning Fast"
+    icon="bolt"
   >
-    Get your docs set up locally for easy development
+    Up to 33x faster than alternatives, with optimized multi-threading and smart caching
   </Card>
   <Card
-    title="Preview Changes"
-    icon="image"
-    href="https://mintlify.com/docs/development"
+    title="🪶 Lightweight"
+    icon="feather"
   >
-    Preview your changes before you push to make sure they're perfect
+    Only 9.7MB base installation, with modular dependencies for what you actually need
+  </Card>
+  <Card
+    title="🎯 Feature Rich"
+    icon="puzzle-piece"
+  >
+    From simple token chunking to advanced semantic chunking, all your RAG needs covered
+  </Card>
+  <Card
+    title="🧠 Smart Defaults"
+    icon="brain"
+  >
+    Battle-tested parameters and intelligent chunking strategies out of the box
   </Card>
 </CardGroup>
 
-## Make it yours
+## Choose Your Chunker
 
-Update your docs to your brand and add valuable content for the best user conversion.
+Chonkie provides multiple chunking strategies to suit your specific needs.
 
 <CardGroup cols={2}>
   <Card
-    title="Customize Style"
-    icon="palette"
-    href="https://mintlify.com/docs/settings/global"
+    title="Token Chunker"
+    icon="cut"
+    href="/chunkers/token-chunker"
   >
-    Customize your docs to your company's colors and brands
+    Split text into fixed-size token chunks with customizable overlap
   </Card>
   <Card
-    title="Reference APIs"
+    title="Word Chunker"
+    icon="font"
+    href="/chunkers/word-chunker"
+  >
+    Maintain word boundaries while chunking for better readability
+  </Card>
+  <Card
+    title="Sentence Chunker"
+    icon="align-left"
+    href="/chunkers/sentence-chunker"
+  >
+    Split on sentence boundaries for natural text divisions
+  </Card>
+  <Card
+    title="Semantic Chunker"
+    icon="diagram-project"
+    href="/chunkers/semantic-chunker"
+  >
+    Group similar content together using embeddings-based similarity
+  </Card>
+</CardGroup>
+
+## Get Started
+
+Ready to start CHONKing? Here's how to get started:
+
+<CardGroup cols={2}>
+  <Card
+    title="Quick Start"
+    icon="play"
+    href="/quickstart"
+  >
+    Get up and running with Chonkie in under 5 minutes
+  </Card>
+  <Card
+    title="API Reference"
     icon="code"
-    href="https://mintlify.com/docs/api-playground/openapi"
+    href="/api-reference/introduction"
   >
-    Automatically generate endpoints from an OpenAPI spec
+    Detailed API documentation for all chunking strategies
   </Card>
   <Card
-    title="Add Components"
-    icon="screwdriver-wrench"
-    href="https://mintlify.com/docs/components/accordion"
+    title="Examples"
+    icon="list-check"
+    href="/examples/basic-usage"
   >
-    Build interactive features and designs to guide your users
+    Real-world examples and best practices for using Chonkie
   </Card>
   <Card
-    title="Get Inspiration"
-    icon="stars"
-    href="https://mintlify.com/customers"
+    title="GitHub"
+    icon="github"
+    href="https://github.com/bhavnicksm/chonkie"
   >
-    Check out our showcase of our favorite documentation
+    Star us on GitHub and contribute to the project
   </Card>
 </CardGroup>
