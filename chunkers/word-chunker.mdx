@@ -4,17 +4,13 @@ description: 'Split text into chunks while maintaining word boundaries'
 icon: 'font'
 ---
 
-# WordChunker
-
 The `WordChunker` splits text into chunks while preserving word boundaries, ensuring that words stay intact and readable.
 
 ## Installation
 
-WordChunker is included in the base installation:
+WordChunker is included in the base installation of Chonkie. No additional dependencies are required.
 
-```bash
-pip install chonkie
-```
+<Info>For installation instructions, see the [Installation Guide](/getting-started/installation).</Info>
 
 ## Initialization
 
@@ -38,13 +34,32 @@ chunker = WordChunker(
 )
 ```
 
+
 ## Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `tokenizer` | `Union[str, tokenizers.Tokenizer, tiktoken.Encoding]` | `"gpt2"` | Tokenizer to use. Can be a string identifier or a tokenizer instance |
-| `chunk_size` | `int` | `512` | Maximum number of tokens per chunk |
-| `chunk_overlap` | `int` | `128` | Number of overlapping tokens between chunks |
+<ParamField
+    path="tokenizer"
+    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding]"
+    default="gpt2"
+>
+    Tokenizer to use. Can be a string identifier or a tokenizer instance
+</ParamField>
+
+<ParamField
+    path="chunk_size"
+    type="int"
+    default="512"
+>
+    Maximum number of tokens per chunk
+</ParamField>
+
+<ParamField
+    path="chunk_overlap"
+    type="int"
+    default="128"
+>
+    Number of overlapping tokens between chunks
+</ParamField>
 
 ## Usage
 
@@ -125,53 +140,3 @@ class Chunk:
     end_index: int      # Ending position in original text
     token_count: int    # Number of tokens in chunk
 ```
-
-## Thread Safety
-
-WordChunker is thread-safe and can be reused across multiple calls without reinitialization. The chunker automatically utilizes multiple threads for batch processing to optimize performance.
-
-## Performance Notes
-
-- Uses efficient word boundary detection algorithms
-- Batch processing automatically utilizes available CPU cores
-- Pre-computed token counts improve chunking speed
-- Handles punctuation and special cases efficiently
-
-## Example: Advanced Usage
-
-```python
-# Initialize with custom settings
-chunker = WordChunker(
-    tokenizer="gpt2",
-    chunk_size=512,
-    chunk_overlap=128
-)
-
-# Process a document with various punctuation
-text = """
-Mr. Smith's co-worker (from N.Y.) said: "This is a complex 
-text with various punctuation marks!" The A.I. system 
-processed it correctly.
-"""
-
-chunks = chunker.chunk(text)
-for chunk in chunks:
-    print(f"Processed chunk: {chunk.text}")
-```
-
-## Best Practices
-
-1. **Optimize Chunk Settings:**
-   - Set appropriate chunk sizes based on your model
-   - Consider word density when setting overlap
-   - Test with your specific content type
-
-2. **Batch Processing:**
-   - Use `chunk_batch()` for multiple documents
-   - Monitor memory usage with large batches
-   - Adjust batch size based on available resources
-
-3. **Content Handling:**
-   - Handle multilingual content with appropriate tokenizers
-   - Consider text preprocessing for unusual formats
-   - Test with representative samples of your data

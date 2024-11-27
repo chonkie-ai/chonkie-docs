@@ -8,11 +8,9 @@ The `TokenChunker` splits text into chunks based on token count, ensuring each c
 
 ## Installation
 
-TokenChunker is included in the base installation:
+TokenChunker is included in the base installation of Chonkie. No additional dependencies are required.
 
-```bash
-pip install chonkie
-```
+<Info> For installation instructions, see the [Installation Guide](/getting-started/installation).</Info>
 
 ## Initialization
 
@@ -38,11 +36,30 @@ chunker = TokenChunker(
 
 ## Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `tokenizer` | `Union[str, tokenizers.Tokenizer, tiktoken.Encoding]` | `"gpt2"` | Tokenizer to use. Can be a string identifier or a tokenizer instance |
-| `chunk_size` | `int` | `512` | Maximum number of tokens per chunk |
-| `chunk_overlap` | `Union[int, float]` | `128` | Number or percentage of overlapping tokens between chunks |
+<ParamField
+    path="tokenizer"
+    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding]"
+    default="gpt2"
+>
+    Tokenizer to use. Can be a string identifier or a tokenizer instance
+</ParamField>
+
+<ParamField
+    path="chunk_size"
+    type="int"
+    default="512"
+>
+    Maximum number of tokens per chunk
+</ParamField>
+
+
+<ParamField
+    path="chunk_overlap"
+    type="Union[int, float]"
+    default="128"
+>
+    Number or percentage of overlapping tokens between chunks
+</ParamField>
 
 ## Usage
 
@@ -123,55 +140,3 @@ class Chunk:
     end_index: int      # Ending position in original text
     token_count: int    # Number of tokens in chunk
 ```
-
-## Thread Safety
-
-TokenChunker is thread-safe and can be reused across multiple calls without reinitialization. However, when using batch processing, be mindful of CPU usage as it may utilize multiple threads for optimization.
-
-## Performance Notes
-
-- TokenChunker uses TikToken by default which is 3-6x faster than alternatives
-- Batch processing automatically utilizes available CPU cores for better performance
-- Default to using string identifiers for tokenizers when possible, as they're initialized efficiently
-- For large-scale processing, consider using `chunk_batch()` instead of multiple `chunk()` calls
-
-## Example: Advanced Usage
-
-```python
-# Initialize with percentage-based overlap
-chunker = TokenChunker(
-    tokenizer="gpt2",
-    chunk_size=512,
-    chunk_overlap=0.2  # 20% overlap between chunks
-)
-
-# Process a large document with custom batch size
-with open("large_document.txt", "r") as f:
-    texts = f.readlines()
-    
-chunks = chunker.chunk_batch(texts, batch_size=1000)
-
-# Extract specific chunks based on token count
-long_chunks = [
-    chunk for chunk_list in chunks
-    for chunk in chunk_list
-    if chunk.token_count > 256
-]
-```
-
-## Best Practices
-
-1. **Choose appropriate chunk sizes:**
-   - Consider your model's context window
-   - Leave room for prompts and other context
-   - Default of 512 works well for most cases
-
-2. **Set overlap based on use case:**
-   - Higher overlap for better context preservation
-   - Lower overlap for efficiency
-   - Use percentage-based overlap for adaptability
-
-3. **Batch processing for large datasets:**
-   - Use `chunk_batch()` for multiple texts
-   - Monitor CPU usage when processing large batches
-   - Consider using a smaller batch size if memory is constrained

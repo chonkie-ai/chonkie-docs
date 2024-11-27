@@ -6,7 +6,8 @@ icon: 'list'
 iconType: 'solid'
 ---
 
-Chonkie provides multiple chunking strategies to handle different text processing needs. Each chunker is optimized for specific use cases while maintaining Chonkie's core principles of being lightweight and fast.
+Chonkie provides multiple chunking strategies to handle different text processing needs. Each chunker in Chonkie is designed to follow the same core principles
+outlined in the [concepts](/getting-started/concepts) page.
 
 <CardGroup cols={2}>
   <Card
@@ -37,6 +38,13 @@ Chonkie provides multiple chunking strategies to handle different text processin
   >
     Groups content based on semantic similarity. Best for preserving context and topical coherence.
   </Card>
+  <Card
+    title="SDPMChunker"
+    icon="brain"
+    href="/chunkers/sdpm-chunker"
+  >
+    Chunks using Semantic Double-Pass Merging (SDPM) algorithm, best for maintaining topical coherence when text has frequent breaks. 
+  </Card>
 </CardGroup>
 
 ## Availability
@@ -50,34 +58,6 @@ Different chunkers are available depending on your installation:
 | SentenceChunker | ✅ |  ✅ | ✅ |
 | SemanticChunker | ❌ |  ✅ | ✅ |
 | SDPMChunker | ❌ | ✅ | ✅ |
-
-## Choosing the Right Chunker
-
-Each chunker is designed for specific use cases:
-
-### TokenChunker
-- **Best for**: Working with LLMs that have strict token limits
-- **Use when**: You need precise control over chunk sizes
-- **Advantages**: Fast, consistent chunk sizes
-- **Limitations**: May break words/sentences
-
-### WordChunker
-- **Best for**: Human-readable output
-- **Use when**: Word integrity is important
-- **Advantages**: Preserves word boundaries, readable chunks
-- **Limitations**: Variable chunk sizes
-
-### SentenceChunker
-- **Best for**: Maintaining sentence context
-- **Use when**: Complete sentences are important
-- **Advantages**: Natural text divisions, preserves sentence meaning
-- **Limitations**: Chunk sizes can vary significantly
-
-### SemanticChunker
-- **Best for**: Context-aware retrieval
-- **Use when**: Topical coherence is crucial
-- **Advantages**: Maintains semantic relationships, better for RAG
-- **Limitations**: Requires additional dependencies
 
 ## Common Interface
 
@@ -94,44 +74,10 @@ chunks = chunker.chunk_batch(texts)
 chunks = chunker(text)  # or chunker([text1, text2])
 ```
 
-## Performance Considerations
+## F.A.Q.
 
-- **TokenChunker**: Fastest, ideal for large-scale processing
-- **WordChunker**: Fast with additional word boundary checks
-- **SentenceChunker**: Moderate speed with sentence parsing
-- **SemanticChunker**: Most compute-intensive due to embeddings
-
-## Best Practices
-
-1. **Start Simple**
-   - Begin with TokenChunker unless you have specific needs
-   - Upgrade to more sophisticated chunkers as needed
-
-2. **Consider Your Use Case**
-   - Token limits → TokenChunker
-   - Human review → WordChunker
-   - Natural language → SentenceChunker
-   - Context preservation → SemanticChunker
-
-3. **Test Performance**
-   - Try different chunkers on your specific data
-   - Monitor chunk sizes and processing times
-   - Balance quality vs. speed for your needs
-
-## Example: Comparing Chunkers
-
-```python
-from chonkie import TokenChunker, WordChunker, SentenceChunker, SemanticChunker
-
-text = """
-Long text that needs to be chunked...
-"""
-
-# Compare different chunking strategies
-token_chunks = TokenChunker().chunk(text)
-word_chunks = WordChunker().chunk(text)
-sentence_chunks = SentenceChunker().chunk(text)
-semantic_chunks = SemanticChunker().chunk(text)
-```
-
-Each chunker will process the same text differently, optimizing for its specific strategy while maintaining Chonkie's core principles of being lightweight and fast.
+<AccordionGroup>
+  <Accordion title="Are all the chunkers thread-safe?" icon="reel">
+    Yes, all the chunkers are thread-safe. Though, the performance might vary since some chunkers use threading under the hood. So, monitor your performance accordingly.
+  </Accordion>
+</AccordionGroup>

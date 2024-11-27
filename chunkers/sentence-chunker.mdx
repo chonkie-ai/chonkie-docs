@@ -4,17 +4,13 @@ description: 'Split text into chunks while preserving sentence boundaries'
 icon: 'align-left'
 ---
 
-# SentenceChunker
-
 The `SentenceChunker` splits text into chunks while preserving complete sentences, ensuring that each chunk maintains proper sentence boundaries and context.
 
 ## Installation
 
-SentenceChunker is included in the base installation:
+SentenceChunker is included in the base installation of Chonkie. No additional dependencies are required.
 
-```bash
-pip install chonkie
-```
+<Info>For installation instructions, see the [Installation Guide](/getting-started/installation).</Info>
 
 ## Initialization
 
@@ -42,12 +38,37 @@ chunker = SentenceChunker(
 
 ## Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `tokenizer` | `Union[str, tokenizers.Tokenizer, tiktoken.Encoding]` | `"gpt2"` | Tokenizer to use. Can be a string identifier or a tokenizer instance |
-| `chunk_size` | `int` | `512` | Maximum number of tokens per chunk |
-| `chunk_overlap` | `int` | `128` | Number of overlapping tokens between chunks |
-| `min_sentences_per_chunk` | `int` | `1` | Minimum number of sentences to include in each chunk |
+<ParamField
+    path="tokenizer"
+    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding]"
+    default="gpt2"
+>
+    Tokenizer to use. Can be a string identifier or a tokenizer instance
+</ParamField>
+
+<ParamField
+    path="chunk_size"
+    type="int"
+    default="512"
+>
+    Maximum number of tokens per chunk
+</ParamField>
+
+<ParamField
+    path="chunk_overlap"
+    type="int"
+    default="128"
+>
+    Number of overlapping tokens between chunks
+</ParamField>
+
+<ParamField
+    path="min_sentences_per_chunk"
+    type="int"
+    default="1"
+>
+    Minimum number of sentences to include in each chunk
+</ParamField>
 
 ## Usage
 
@@ -136,64 +157,3 @@ class SentenceChunk(Chunk):
     token_count: int    # Number of tokens in chunk
     sentences: List[Sentence]  # List of sentences in chunk
 ```
-
-## Thread Safety
-
-SentenceChunker is thread-safe and can be reused across multiple calls without reinitialization. The chunker automatically utilizes multiple threads for batch processing to optimize performance.
-
-## Performance Notes
-
-- Efficient sentence boundary detection
-- Batch processing automatically utilizes available CPU cores
-- Pre-computed token counts improve chunking speed
-- Handles various sentence patterns and punctuation marks
-
-## Example: Advanced Usage
-
-```python
-# Initialize with custom settings for academic text
-chunker = SentenceChunker(
-    tokenizer="gpt2",
-    chunk_size=512,
-    chunk_overlap=128,
-    min_sentences_per_chunk=2  # Ensure context with multiple sentences
-)
-
-# Process academic text with citations
-text = """
-The study found significant results (Smith et al., 2023). 
-This supports previous findings in the field. However, 
-some limitations were noted by researchers. The impact 
-on future studies remains to be seen.
-"""
-
-chunks = chunker.chunk(text)
-for chunk in chunks:
-    print(f"Number of sentences: {len(chunk.sentences)}")
-    for sentence in chunk.sentences:
-        print(f"Sentence: {sentence.text}")
-```
-
-## Best Practices
-
-1. **Optimize Chunk Settings:**
-   - Set appropriate chunk sizes based on your model
-   - Consider sentence length when setting overlap
-   - Adjust min_sentences_per_chunk based on your needs
-   - Test with your specific content type
-
-2. **Handling Different Text Types:**
-   - Academic text: Consider higher min_sentences_per_chunk
-   - Dialogue: Be aware of quotation marks and speakers
-   - Lists: Handle numbered or bulleted sentences appropriately
-
-3. **Batch Processing:**
-   - Use `chunk_batch()` for multiple documents
-   - Monitor memory usage with large batches
-   - Adjust batch size based on available resources
-
-4. **Content Considerations:**
-   - Be mindful of abbreviations (e.g., "Dr.", "Mr.")
-   - Handle parenthetical citations appropriately
-   - Consider text preprocessing for special formats
-   - Test with representative samples of your data
