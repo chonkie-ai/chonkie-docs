@@ -60,9 +60,11 @@
       "group": "Embeddings",
       "pages": [
         "embeddings/overview",
+        "embeddings/auto-embeddings",
         "embeddings/sentence-transformer-embeddings",
         "embeddings/openai-embeddings",
-        "embeddings/model2vec-embeddings"
+        "embeddings/model2vec-embeddings",
+        "embeddings/custom-embeddings"
       ]
     }
   ],
