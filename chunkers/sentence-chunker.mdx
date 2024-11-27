@@ -63,12 +63,22 @@ chunker = SentenceChunker(
 </ParamField>
 
 <ParamField
+    path="min_chunk_size"
+    type="Optional[int]"
+    default="None"
+>
+    Minimum tokens per chunk
+</ParamField>
+
+<ParamField
     path="min_sentences_per_chunk"
     type="int"
     default="1"
 >
     Minimum number of sentences to include in each chunk
 </ParamField>
+
+
 
 ## Usage
 

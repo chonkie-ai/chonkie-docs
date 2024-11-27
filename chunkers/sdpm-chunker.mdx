@@ -68,7 +68,7 @@ chunker = SDPMChunker(
     type="Optional[float]"
     default="0.8"
 >
-    Percentile-based threshold (0-100) for similarity
+    Percentile-based threshold (0-1) for similarity
 </ParamField>
 
 <ParamField
@@ -77,6 +77,14 @@ chunker = SDPMChunker(
     default="512"
 >
     Maximum tokens per chunk
+</ParamField>
+
+<ParamField
+    path="min_chunk_size"
+    type="Optional[int]"
+    default="None"
+>
+    Minimum tokens per chunk
 </ParamField>
 
 <ParamField
@@ -131,26 +139,7 @@ for doc_chunks in batch_chunks:
 
 ## Supported Embeddings
 
-SDPMChunker supports multiple embedding providers through Chonkie's embedding system:
-
-- **Model2Vec Embeddings** (Default)
-  ```python
-  chunker = SDPMChunker("minishlab/potion-base-8M")
-  ```
-
-- **Custom Embeddings**
-  ```python
-  from chonkie.embeddings import BaseEmbeddings
-   
-  class CustomEmbeddings(BaseEmbeddings):
-      def embed(self, text: str) -> np.ndarray:
-          # Implementation
-          pass
-       
-      def embed_batch(self, texts: List[str]) -> List[np.ndarray]:
-          # Implementation
-          pass
-  ```
+SDPMChunker supports multiple embedding providers through Chonkie's embedding system. See the [Embeddings Overview](/embeddings/overview) for more information.
 
 ## Return Type
 
