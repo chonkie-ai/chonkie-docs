@@ -55,6 +55,15 @@
         "chunkers/semantic-chunker",
         "chunkers/sdpm-chunker"
       ]
+    }, 
+    {
+      "group": "Embeddings",
+      "pages": [
+        "embeddings/overview",
+        "embeddings/sentence-transformer-embeddings",
+        "embeddings/openai-embeddings",
+        "embeddings/model2vec-embeddings"
+      ]
     }
   ],
   "feedback": {
