@@ -40,8 +40,9 @@
     {
       "group": "Getting Started",
       "pages": [
-        "introduction",
-        "installation"
+        "getting-started/introduction",
+        "getting-started/installation", 
+        "getting-started/concepts"
       ]
     },
     {
