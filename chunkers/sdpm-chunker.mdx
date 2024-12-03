@@ -41,7 +41,7 @@ custom_embeddings = CustomEmbeddings()
 chunker = SDPMChunker(
     embedding_model=custom_embeddings,
     similarity_threshold=0.5,
-    max_chunk_size=512
+    chunk_size=512
 )
 ```
 
