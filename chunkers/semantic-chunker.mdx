@@ -56,8 +56,8 @@ chunker = SemanticChunker(
 
 <ParamField
     path="threshold"
-    type="Optional[float]"
-    default="None"
+    type="Optional[float, int, str]"
+    default="auto"
 >
    When in the range [0,1], denotes the similarity threshold to consider sentences similar.
    When in the range (1,100], interprets the given value as a percentile threshold.

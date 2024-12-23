@@ -24,7 +24,7 @@ from chonkie import SDPMChunker
 # Basic initialization with default parameters
 chunker = SDPMChunker(
     embedding_model="minishlab/potion-base-8M",  # Default model
-    threshold=0.5,                   # Similarity threshold (0-1)
+    threshold=0.5,                              # Similarity threshold (0-1)
     chunk_size=512,                             # Maximum tokens per chunk
     initial_sentences=1,                        # Initial sentences per chunk
     skip_window=1                               # Number of chunks to skip when looking for similarities
@@ -57,8 +57,8 @@ chunker = SDPMChunker(
 
 <ParamField
     path="threshold"
-    type="Optional[float]"
-    default="None"
+    type="Optional[float, int, str]"
+    default="auto"
 >
     When in the range [0,1], denotes the similarity threshold to consider sentences similar.
     When in the range (1,100], interprets the given value as a percentile threshold.
