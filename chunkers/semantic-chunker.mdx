@@ -28,20 +28,6 @@ chunker = SemanticChunker(
     chunk_size=512,                              # Maximum tokens per chunk
     min_sentences=1                              # Initial sentences per chunk
 )
-
-# Using a custom embedding model
-from chonkie.embeddings import BaseEmbeddings
-
-class CustomEmbeddings(BaseEmbeddings):
-    # Implement required methods...
-    pass
-
-custom_embeddings = CustomEmbeddings()
-chunker = SemanticChunker(
-    embedding_model=custom_embeddings,
-    threshold=0.5,
-    chunk_size=512
-)
 ```
 
 ## Parameters

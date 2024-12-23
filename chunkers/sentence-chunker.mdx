@@ -24,16 +24,6 @@ chunker = SentenceChunker(
     chunk_overlap=128,               # Overlap between chunks
     min_sentences_per_chunk=1        # Minimum sentences in each chunk
 )
-
-# Using a custom tokenizer
-from tokenizers import Tokenizer
-custom_tokenizer = Tokenizer.from_pretrained("your-tokenizer")
-chunker = SentenceChunker(
-    tokenizer=custom_tokenizer,
-    chunk_size=512,
-    chunk_overlap=128,
-    min_sentences_per_chunk=2
-)
 ```
 
 ## Parameters

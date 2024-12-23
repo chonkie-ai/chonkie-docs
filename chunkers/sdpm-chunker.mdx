@@ -29,20 +29,6 @@ chunker = SDPMChunker(
     min_sentences=1,                            # Initial sentences per chunk
     skip_window=1                               # Number of chunks to skip when looking for similarities
 )
-
-# Using a custom embedding model
-from chonkie.embeddings import BaseEmbeddings
-
-class CustomEmbeddings(BaseEmbeddings):
-    # Implement required methods...
-    pass
-
-custom_embeddings = CustomEmbeddings()
-chunker = SDPMChunker(
-    embedding_model=custom_embeddings,
-    threshold=0.5,
-    chunk_size=512
-)
 ```
 
 ## Parameters
