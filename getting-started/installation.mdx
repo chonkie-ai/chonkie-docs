@@ -47,8 +47,10 @@ The following table shows which chunkers are available with different installati
 | SentenceChunker | ✅ |  ✅ | ✅ |
 | SemanticChunker | ❌ |  ✅ | ✅ |
 | SDPMChunker | ❌ | ✅ | ✅ |
+| LateChunker | ❌ | ✅ | ✅ |
 
-Any of the embeddings availability will enable the `SemanticChunker` and `SDPMChunker`. You can use the `chonkie[semantic]` install for quick access to these features.
+Any of the embeddings availability will enable the `SemanticChunker` and `SDPMChunker`. You can use the `chonkie[semantic]` install for quick access to these features. 
+However, `LateChunker` requires the `sentence-transformers` library to be installed, and currently only supports SentenceTransformer models. You can install it with `pip install "chonkie[st]"`.
 
 ## Embeddings Availability
 

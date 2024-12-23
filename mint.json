@@ -53,7 +53,8 @@
         "chunkers/word-chunker",
         "chunkers/sentence-chunker",
         "chunkers/semantic-chunker",
-        "chunkers/sdpm-chunker"
+        "chunkers/sdpm-chunker", 
+        "chunkers/late-chunker"
       ]
     }, 
     {
