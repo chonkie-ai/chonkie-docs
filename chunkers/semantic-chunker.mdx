@@ -26,7 +26,7 @@ chunker = SemanticChunker(
     embedding_model="minishlab/potion-base-8M",  # Default model
     threshold=0.5,                               # Similarity threshold (0-1) or (1-100) or "auto"
     chunk_size=512,                              # Maximum tokens per chunk
-    initial_sentences=1                          # Initial sentences per chunk
+    min_sentences=1                              # Initial sentences per chunk
 )
 
 # Using a custom embedding model
@@ -55,6 +55,14 @@ chunker = SemanticChunker(
 </ParamField>
 
 <ParamField
+    path="mode"
+    type="Optional[str]"
+    default="window"
+>
+    Mode for grouping sentences, either "cumulative" or "window"
+</ParamField>
+
+<ParamField
     path="threshold"
     type="Optional[float, int, str]"
     default="auto"
@@ -73,6 +81,30 @@ chunker = SemanticChunker(
 </ParamField>
 
 <ParamField
+    path="similarity_window"
+    type="int"
+    default="1"
+>
+    Number of sentences to consider for similarity threshold calculation
+</ParamField>
+
+<ParamField
+    path="min_sentences"
+    type="int"
+    default="1"
+>
+    Minimum number of sentences per chunk
+</ParamField>
+
+<ParamField
+    path="min_characters_per_sentence"
+    type="int"
+    default="12"
+>
+    Minimum number of characters per sentence
+</ParamField>
+
+<ParamField
     path="min_chunk_size"
     type="Optional[int]"
     default="None"
@@ -81,11 +113,19 @@ chunker = SemanticChunker(
 </ParamField>
 
 <ParamField
-    path="initial_sentences"
-    type="int"
-    default="1"
+    path="threshold_step"
+    type="Optional[float]"
+    default="0.01"
 >
-    Number of sentences to start each chunk with
+    Step size for similarity threshold calculation
+</ParamField>
+
+<ParamField
+    path="delim"
+    type="Union[str, List[str]]"
+    default="['.', '!', '?', '\n']"
+>
+    Delimiters to split sentences on
 </ParamField>
 
 ## Usage

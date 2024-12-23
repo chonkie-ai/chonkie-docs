@@ -26,7 +26,7 @@ chunker = SDPMChunker(
     embedding_model="minishlab/potion-base-8M",  # Default model
     threshold=0.5,                              # Similarity threshold (0-1)
     chunk_size=512,                             # Maximum tokens per chunk
-    initial_sentences=1,                        # Initial sentences per chunk
+    min_sentences=1,                            # Initial sentences per chunk
     skip_window=1                               # Number of chunks to skip when looking for similarities
 )
 
@@ -56,6 +56,14 @@ chunker = SDPMChunker(
 </ParamField>
 
 <ParamField
+    path="mode"
+    type="Optional[str]"
+    default="window"
+>
+    Mode for grouping sentences, either "cumulative" or "window"
+</ParamField>
+
+<ParamField
     path="threshold"
     type="Optional[float, int, str]"
     default="auto"
@@ -74,6 +82,22 @@ chunker = SDPMChunker(
 </ParamField>
 
 <ParamField
+    path="similarity_window"
+    type="int"
+    default="1"
+>
+    Number of sentences to consider for similarity threshold calculation
+</ParamField>
+
+<ParamField
+    path="min_sentences"
+    type="int"
+    default="1"
+>
+    Minimum number of sentences per chunk
+</ParamField>
+
+<ParamField
     path="min_chunk_size"
     type="Optional[int]"
     default="None"
@@ -82,11 +106,27 @@ chunker = SDPMChunker(
 </ParamField>
 
 <ParamField
-    path="initial_sentences"
+    path="min_characters_per_sentence"
     type="int"
-    default="1"
+    default="12"
 >
-    Number of sentences to start each chunk with
+    Minimum number of characters per sentence
+</ParamField>
+
+<ParamField
+    path="threshold_step"
+    type="Optional[float]"
+    default="0.01"
+>
+    Step size for threshold calculation
+</ParamField>
+
+<ParamField
+    path="delim"
+    type="Union[str, List[str]]"
+    default="['.', '!', '?', '\n']"
+>
+    Delimiters to split sentences on
 </ParamField>
 
 <ParamField
