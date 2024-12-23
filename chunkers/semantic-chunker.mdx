@@ -24,9 +24,9 @@ from chonkie import SemanticChunker
 # Basic initialization with default parameters
 chunker = SemanticChunker(
     embedding_model="minishlab/potion-base-8M",  # Default model
-    similarity_threshold=0.5,                   # Similarity threshold (0-1)
-    chunk_size=512,                             # Maximum tokens per chunk
-    initial_sentences=1                         # Initial sentences per chunk
+    threshold=0.5,                               # Similarity threshold (0-1) or (1-100) or "auto"
+    chunk_size=512,                              # Maximum tokens per chunk
+    initial_sentences=1                          # Initial sentences per chunk
 )
 
 # Using a custom embedding model
@@ -39,7 +39,7 @@ class CustomEmbeddings(BaseEmbeddings):
 custom_embeddings = CustomEmbeddings()
 chunker = SemanticChunker(
     embedding_model=custom_embeddings,
-    similarity_threshold=0.5,
+    threshold=0.5,
     chunk_size=512
 )
 ```
@@ -55,19 +55,13 @@ chunker = SemanticChunker(
 </ParamField>
 
 <ParamField
-    path="similarity_threshold"
+    path="threshold"
     type="Optional[float]"
     default="None"
 >
-    Minimum similarity score (0-1) to consider sentences similar
-</ParamField>
-
-<ParamField
-    path="similarity_percentile"
-    type="Optional[float]"
-    default="0.8"
->
-    Percentile-based threshold (0-100) for similarity
+   When in the range [0,1], denotes the similarity threshold to consider sentences similar.
+   When in the range (1,100], interprets the given value as a percentile threshold.
+   When set to "auto", the threshold is automatically calculated.
 </ParamField>
 
 <ParamField
