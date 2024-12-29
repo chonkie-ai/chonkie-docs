@@ -85,6 +85,13 @@
         "embeddings/model2vec-embeddings",
         "embeddings/custom-embeddings"
       ]
+    }, 
+    {
+      "group": "Refinery",
+      "pages": [
+        "refinery/overview",
+        "refinery/overlap-refinery"
+      ]
     }
   ],
   "feedback": {
