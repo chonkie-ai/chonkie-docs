@@ -51,6 +51,11 @@
       "name": "Discord",
       "icon": "discord",
       "url": "https://discord.gg/nMYNVyuB5Y"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://blog.chonkie.ai/"
     }
   ], 
   "navigation": [
@@ -93,7 +98,8 @@
   "footerSocials": {
     "github": "https://github.com/chonkie-ai/chonkie",
     "x": "https://x.com/ChonkieAI",
-    "discord": "https://discord.com/invite/Q6zkP8w6ur"
+    "discord": "https://discord.com/invite/Q6zkP8w6ur",
+    "medium": "https://blog.chonkie.ai/"
   }, 
   "metadata": {
     "og:site_map": "Chonkie Documentation",
