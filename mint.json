@@ -74,6 +74,7 @@
         "chunkers/token-chunker",
         "chunkers/word-chunker",
         "chunkers/sentence-chunker",
+        "chunkers/recursive-chunker",
         "chunkers/semantic-chunker",
         "chunkers/sdpm-chunker", 
         "chunkers/late-chunker"
@@ -88,6 +89,13 @@
         "embeddings/openai-embeddings",
         "embeddings/model2vec-embeddings",
         "embeddings/custom-embeddings"
+      ]
+    }, 
+    {
+      "group": "Refinery",
+      "pages": [
+        "refinery/overview",
+        "refinery/overlap-refinery"
       ]
     }
   ],
