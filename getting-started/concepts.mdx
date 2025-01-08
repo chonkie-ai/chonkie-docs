@@ -40,23 +40,29 @@ This is how Chonkie's chunkers are designed to be. Understanding this will help 
 
 ## Is chunking necessary? Can't I just use the entire document as a chunk? 
 
-Yes! Chunking is absolutely necessary as long as laws of physics are still valid. That's a strong statement, so let me explain. 
+Nope. Here’s why chunking is absolutely essential:  
 
-Chunking is necessary because:
+#### 1. **Limited Context Windows**  
+All models have a limit on how much text they can process at once. 
+This is referred to as their "context window". 
+Chunking breaks down large documents into manageable pieces that fit within these limits.  
 
-- **Limited Context Window**: Most models have a context window, i.e., they can only see a limited number of tokens at a time. Chunking allows us to process larger documents by breaking them down into smaller chunks
-which can be fed into the model one at a time. Infinite context is not only impossible from the perspective of laws of physics, but also computationally infeasible. Speed of light and all that. 
-- **Computational Efficiency**: Imagine you have 100GB large text file, and you want a Model to read it every time you query it. So would you load it into memory every time? 
-No, if you do that, you'd be waiting for a very long time, since Attention mechanisms are still O(n) after all the optimizations. Plus, as you might have guessed, you'd run out of memory too. Chunking allows you to process smaller parts of the document in a manageable way. 
-Till we can do attention in O(1) of course, which is impossible by the laws of physics. Speed of light and all that. 
-- **Representational**: A chunk should be representative of the document, i.e., it should contain enough information to be useful. But, it should also be independent, i.e., it should only tackle one idea. 
-Converting a entire document into a chunk loses this property, since the representation model gets all confused about the context. These representation models convert compress the information into a vector space, and it's a lossy compression. 
-Until we can do infinite precision vector spaces of course, which is impossible by the laws of physics. Speed of light and all that. 
-- **Hallucination**: Not only represenation models, but even generation models can hallucinate if they are given too much context. Chunking allows you to feed one chunk at a time, thereby reducing the chances of hallucination.
-Hallucination is when the model uses information that's irrelevant to the query at hand to answer the query, which is a big no no. And, it's more likely to happen if the model is given too much context. 
-Models would always hallucinate if they are given too much context, until we can have models be infintely attentive of course, which is impossible by the laws of physics. Speed of light and all that. 
+#### 2. **Computational Efficiency**  
+Processing a 100GB document every time you make a query? Bad idea. 
+Attention mechanisms, even when optimized, are computationally expensive (`O(n)`). 
+Chunking keeps things efficient and memory-friendly.  
 
-All these reasons make chunking absolutely necessary for RAG applications, and any serious RAG-ger out there should be chunking their documents. Don't let me catch you using the entire document as a chunk! 
+#### 3. **Better Representation**  
+As mentioned earlier, chunks represent each idea as an independent entity. 
+Not chunking your document will likely cause your model to conflate concepts and get confused. 
+Representation models use lossy compression, so keeping chunks concise ensures the model understands the context better.  
+
+#### 4. **Reduced Hallucination**  
+Feeding too much context at once makes models hallucinate. 
+They start using irrelevant information to answer queries, and that’s a **big** no-no. 
+Smaller, focused chunks reduce this risk.  
+
+All of this makes chunking a **must-have** for RAG applications. Don't get caught using your whole document as a single chunk! 
 
 ## How is Chonkie so fast? What is the secret sauce? 
 
