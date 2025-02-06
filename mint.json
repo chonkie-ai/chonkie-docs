@@ -56,6 +56,11 @@
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://blog.chonkie.ai/"
+    }, 
+    {
+      "name": "Cookbook",
+      "icon": "book",
+      "url": "https://github.com/chonkie-ai/chonkie/tree/main/cookbook"
     }
   ], 
   "navigation": [
