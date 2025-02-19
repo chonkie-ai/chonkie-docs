@@ -75,19 +75,60 @@ Different chunkers are available depending on your installation:
 | SDPMChunker | ❌ | ✅ | ✅ |
 | LateChunker | ❌ | ✅ | ✅ |
 
-## Common Interface
+## Universal Tokenizer Support
 
-All chunkers share a consistent interface:
+All chunkers can accept any tokenizer in their `tokenizer` or `tokenizer_or_token_counter` argument, including `tiktoken`, `huggingface/tokenizers` or `transformers`.
+You can also pass a `token_counter` function to the chunker, which will be used to count the tokens in the text.
 
 ```python
+from tokenizer import Tokenizer
+from chonkie import TokenChunker
+
+tokenizer = Tokenizer.from_pretrained("gpt2")
+chunker = TokenChunker(tokenizer=tokenizer)
+
+chunks = chunker("Hello, world!")
+```
+
+And if you want to use a `token_counter` function, you can do:
+
+```python
+from chonkie import SentenceChunker
+
+# Define your own token counter function
+def token_counter(text):
+    return len(text.split())
+
+# Pass the token counter function to the chunker
+chunker = SentenceChunker(tokenizer_or_token_counter=token_counter)
+
+chunks = chunker("Hello, world!")
+```
+
+Furthermore, you can pass in `character` or `word` in the `tokenizer_or_token_counter` argument to count the number of characters or words in the text.
+
+```python
+from chonkie import SentenceChunker
+
+# Count the number of characters in the text
+chunker = SentenceChunker(tokenizer_or_token_counter="character")
+
+chunks = chunker("Hello, world!")
+```
+
+## Common Interface
+
+All chunkers share a consistent interface. You can directly call the chunker on a string or a list of strings.
+
+```python
+# Direct calling
+chunks = chunker(text)  # or chunker([text1, text2])
+
 # Single text chunking
 chunks = chunker.chunk(text)
 
 # Batch processing
-chunks = chunker.chunk_batch(texts)
-
-# Direct calling
-chunks = chunker(text)  # or chunker([text1, text2])
+chunks = chunker.chunk_batch(texts, show_progress_bar=True)
 ```
 
 ## F.A.Q.
@@ -95,5 +136,11 @@ chunks = chunker(text)  # or chunker([text1, text2])
 <AccordionGroup>
   <Accordion title="Are all the chunkers thread-safe?" icon="reel">
     Yes, all the chunkers are thread-safe. Though, the performance might vary since some chunkers use threading under the hood. So, monitor your performance accordingly.
+  </Accordion>
+  <Accordion title="How do I chunk a text based on character count?">
+    You can pass in `character` in the `tokenizer_or_token_counter` argument to count the number of characters in the text.
+  </Accordion>
+  <Accordion title="Can I chunk a text based on structural boundaries?">
+    Yes, you can use the `RecursiveChunker` to chunk a text based on structural boundaries. Have a look at the [RecursiveChunker](/chunkers/recursive-chunker) page for more details.
   </Accordion>
 </AccordionGroup>
