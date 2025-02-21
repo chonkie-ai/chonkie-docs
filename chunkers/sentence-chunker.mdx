@@ -19,21 +19,27 @@ from chonkie import SentenceChunker
 
 # Basic initialization with default parameters
 chunker = SentenceChunker(
-    tokenizer="gpt2",                # Supports string identifiers
-    chunk_size=512,                  # Maximum tokens per chunk
-    chunk_overlap=128,               # Overlap between chunks
-    min_sentences_per_chunk=1        # Minimum sentences in each chunk
+    tokenizer_or_token_counter="gpt2",                # Supports string identifiers
+    chunk_size=512,                                   # Maximum tokens per chunk
+    chunk_overlap=0,                                  # Overlap between chunks
+    min_sentences_per_chunk=1,                        # Minimum sentences in each chunk
+    min_characters_per_sentence=12,                   # Minimum characters per sentence
+    approximate=True,                                  # Use approximate token counting
+    include_delim="prev",                             # Include the delimiter in the chunk
+    return_type="chunks"                              # Return Chunks or texts only 
 )
 ```
 
 ## Parameters
 
 <ParamField
-    path="tokenizer"
-    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding]"
+    path="tokenizer_or_token_counter"
+    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding, Callable]"
     default="gpt2"
 >
-    Tokenizer to use. Can be a string identifier or a tokenizer instance
+    Tokenizer to use. Can be a string identifier or a tokenizer instance.
+    If a callable is passed, it should take a string and return the number of tokens in the string.
+    See the [Universal Tokenizer Support](/chunkers/overview#universal-tokenizer-support) section for more details.
 </ParamField>
 
 <ParamField
@@ -47,17 +53,9 @@ chunker = SentenceChunker(
 <ParamField
     path="chunk_overlap"
     type="int"
-    default="128"
+    default="0"
 >
     Number of overlapping tokens between chunks
-</ParamField>
-
-<ParamField
-    path="min_chunk_size"
-    type="Optional[int]"
-    default="None"
->
-    Minimum tokens per chunk
 </ParamField>
 
 <ParamField
@@ -65,79 +63,128 @@ chunker = SentenceChunker(
     type="int"
     default="1"
 >
-    Minimum number of sentences to include in each chunk
+    Minimum number of sentences to include in each chunk.
+    In case it is not possible to meet this requirement, the chunker will return as many sentences as possible.
 </ParamField>
 
+<ParamField
+    path="min_characters_per_sentence"
+    type="Optional[int]"
+    default="None"
+>
+    Minimum number of characters per sentence.
+    In case it is not possible to meet this requirement, the chunker will return as many characters as possible.
+</ParamField>
+
+<ParamField
+    path="approximate"
+    type="bool"
+    default="True"
+>
+    Use approximate token counting
+</ParamField>
+
+<ParamField
+    path="include_delim"
+    type="Literal['prev', 'next'] | None"
+    default="prev"
+>
+    Whether to include the delimiter in the chunk.
+    If 'prev', the delimiter will be included at the end of the previous chunk.
+    If 'next', the delimiter will be included at the beginning of the next chunk.
+    If None, the delimiter will not be included in the chunk.
+</ParamField>
+
+<ParamField
+    path="return_type"
+    type="Literal['chunks', 'texts']"
+    default="chunks"
+>
+    Return type. Can be `chunks` or `texts`.
+</ParamField>
+
+## Methods
+
+The `SentenceChunker` class provides the following methods:
+
+### `__call__`
+
+The `__call__` method can be used to call the chunker on a single text or a list of texts. It returns a list of `SentenceChunk` objects or a list of strings, depending on the `return_type` parameter.
 
 
-## Usage
+**Arguments**
 
-### Single Text Chunking
+<ParamField
+    path="text"
+    type="Union[str, List[str]]"
+>
+    Text to chunk.
+</ParamField>
 
-```python
-text = """This is the first sentence. This is the second sentence. 
-And here's a third one with some additional context."""
-chunks = chunker.chunk(text)
+<ParamField
+    path="show_progress_bar"
+    type="bool"
+    default="True"
+>
+    Whether to show a progress bar.
+</ParamField>
 
-for chunk in chunks:
-    print(f"Chunk text: {chunk.text}")
-    print(f"Token count: {chunk.token_count}")
-    print(f"Number of sentences: {len(chunk.sentences)}")
-```
+**Returns**
 
-### Batch Chunking
+<ResponseField
+    name="returns"
+    type="Union[List[SentenceChunk], List[List[SentenceChunk]], List[str], List[List[str]]]"
+>
+    List of `SentenceChunk` objects or a list of lists of `SentenceChunk` objects or a list of strings or a list of lists of strings.
+    The structure of the returned list depends on the `return_type` parameter and the amount of input texts.
+</ResponseField>
 
-```python
-texts = [
-    "First document. With multiple sentences.",
-    "Second document. Also with sentences. And more context."
-]
-batch_chunks = chunker.chunk_batch(texts)
+### `.chunk`
 
-for doc_chunks in batch_chunks:
-    for chunk in doc_chunks:
-        print(f"Chunk: {chunk.text}")
-```
+Chunk a single text.
 
-### Using as a Callable
+**Arguments**
 
-```python
-# Single text
-chunks = chunker("First sentence. Second sentence.")
+<ParamField
+    path="text"
+    type="str"
+>
+    Text to chunk.
+</ParamField>
 
-# Multiple texts
-batch_chunks = chunker(["Text 1. More text.", "Text 2. More."])
-```
+**Returns**
 
-## Supported Tokenizers
+<ResponseField
+    name="returns"
+    type="Union[List[SentenceChunk], List[str]]"
+>
+    Chunked text.
+</ResponseField>
 
-SentenceChunker supports multiple tokenizer backends:
+### `.chunk_batch`
 
-- **TikToken** (Recommended)
-  ```python
-  import tiktoken
-  tokenizer = tiktoken.get_encoding("gpt2")
-  ```
+Chunk a batch of texts.
 
-- **AutoTikTokenizer**
-  ```python
-  from autotiktokenizer import AutoTikTokenizer
-  tokenizer = AutoTikTokenizer.from_pretrained("gpt2")
-  ```
+**Arguments**
 
-- **Hugging Face Tokenizers**
-  ```python
-  from tokenizers import Tokenizer
-  tokenizer = Tokenizer.from_pretrained("gpt2")
-  ```
+<ParamField
+    path="texts"
+    type="List[str]"
+>
+    List of texts to chunk.
+</ParamField>
 
-- **Transformers**
-  ```python
-  from transformers import AutoTokenizer
-  tokenizer = AutoTokenizer.from_pretrained("gpt2")
-  ```
+**Returns**
 
-## Return Type
+<ResponseField
+    name="returns"
+    type="Union[List[List[SentenceChunk]], List[List[str]]]"
+>
+    List of lists of `SentenceChunk` objects or a list of lists of strings.
+</ResponseField>
+
+
+## Associated Return Types
 
 SentenceChunker returns chunks as `SentenceChunk` objects with additional sentence metadata:
 
