@@ -25,6 +25,7 @@ chunker = SentenceChunker(
     min_sentences_per_chunk=1,                        # Minimum sentences in each chunk
     min_characters_per_sentence=12,                   # Minimum characters per sentence
     approximate=True,                                 # Use approximate token counting
+    delim=[".", "?", "!", "\n"],                      # Delimiters to use for chunking
     include_delim="prev",                             # Include the delimiter in the chunk
     return_type="chunks"                              # Return Chunks or texts only 
 )
@@ -82,6 +83,15 @@ chunker = SentenceChunker(
     default="True"
 >
     Use approximate token counting
+</ParamField>
+
+<ParamField
+    path="delim"
+    type="Union[str, List[str]]"
+    default="['.', '?', '!', '\n']"
+>
+    Delimiters to use for chunking.
+    If a string is passed, it will be converted to a list.
 </ParamField>
 
 <ParamField
@@ -183,6 +193,152 @@ Chunk a batch of texts.
     List of lists of `SentenceChunk` objects or a list of lists of strings.
 </ResponseField>
 
+## Usage Examples
+
+<AccordionGroup>
+    <Accordion title="Basic Usage">
+        ```python
+        # Import the SentenceChunker
+        from chonkie import SentenceChunker
+
+        # Initialize the chunker
+        chunker = SentenceChunker()
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(chunk.sentences)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Getting texts instead of chunks">
+    You can also get texts instead of chunks by passing in "texts" in the `return_type` argument.
+    
+        ```python
+        # Import the SentenceChunker
+        from chonkie import SentenceChunker
+
+        # Initialize the chunker
+        chunker = SentenceChunker(return_type="texts")
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk) # This will print the chunk text (str)
+        ```
+    </Accordion>
+
+    <Accordion title="Batch Processing">
+        You can also process a batch of texts at once.
+        
+        ```python
+        # Import the SentenceChunker
+        from chonkie import SentenceChunker
+
+        # Initialize the chunker
+        chunker = SentenceChunker()
+
+        # Chunk a batch of texts
+        # You can directly call the chunker OR use the `.chunk_batch()` method
+        batch_chunks = chunker(["Text 1", "Text 2", "Text 3"], show_progress_bar=True)
+        batch_chunks = chunker.chunk_batch(["Text 1", "Text 2", "Text 3"], show_progress_bar=False)
+
+        # Print the chunks
+        for chunks in batch_chunks:
+            for chunk in chunks:
+                print(chunk.text)
+                print(chunk.token_count)
+                print(chunk.sentences)
+                print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using a custom tokenizer">
+        You can also use a custom tokenizer by passing in a tokenizer instance.
+        
+        ```python
+        # Import the SentenceChunker and Tokenizer
+        from chonkie import SentenceChunker
+        from tokenizers import Tokenizer
+
+        # Initialize the tokenizer
+        tokenizer = Tokenizer.from_pretrained("bert-base-uncased") # or any other tokenizer
+
+        # Initialize the chunker
+        chunker = SentenceChunker(tokenizer_or_token_counter="bert-base-uncased") # Directly pass the tokenizer name
+        chunker = SentenceChunker(tokenizer_or_token_counter=tokenizer) # Pass the tokenizer instance
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(chunk.sentences)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using a custom token counter">
+        You can also use a custom token counter by passing in a callable.
+        
+        ```python
+        # Import the SentenceChunker
+        from chonkie import SentenceChunker
+
+        # Define a custom token counter
+        def custom_token_counter(text):
+            return len(text)
+
+        # Initialize the chunker
+        chunker = SentenceChunker(tokenizer_or_token_counter=custom_token_counter)
+        chunker = SentenceChunker(tokenizer_or_token_counter=lambda x: len(x)) # Equivalent to the custom token counter
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(chunk.sentences)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using custom delimiters">
+        You can also use custom delimiters by passing in a list of delimiters.
+        This is especially useful when you want to chunk text in a language other than English, like Chinese or Hindi. 
+        The default delimiters are `[".", "?", "!", "\n"]`.
+
+        ```python
+        # Import the SentenceChunker
+        from chonkie import SentenceChunker
+
+        # Initialize the chunker
+        chunker = SentenceChunker(delim="。", include_delim="prev")
+        chunker = SentenceChunker(delim=["。", "？", "！", "\n"], include_delim="prev")
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(chunk.sentences)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+</AccordionGroup>
 
 ## Associated Return Types
 
