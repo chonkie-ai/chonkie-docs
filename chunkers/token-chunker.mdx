@@ -19,9 +19,10 @@ from chonkie import TokenChunker
 
 # Basic initialization with default parameters
 chunker = TokenChunker(
-    tokenizer="gpt2",  # Supports string identifiers
-    chunk_size=512,    # Maximum tokens per chunk
-    chunk_overlap=128  # Overlap between chunks
+    tokenizer="gpt2",      # Supports string identifiers
+    chunk_size=512,        # Maximum tokens per chunk
+    chunk_overlap=0,       # Overlap between chunks
+    return_type="chunks"   # Return type of the chunker; "chunks" or "texts"
 )
 
 # Using a custom tokenizer
@@ -30,7 +31,8 @@ custom_tokenizer = Tokenizer.from_pretrained("your-tokenizer")
 chunker = TokenChunker(
     tokenizer=custom_tokenizer,
     chunk_size=512,
-    chunk_overlap=128
+    chunk_overlap=0,
+    return_type="chunks"
 )
 ```
 
@@ -38,10 +40,12 @@ chunker = TokenChunker(
 
 <ParamField
     path="tokenizer"
-    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding]"
+    type="Union[str, tokenizers.Tokenizer, tiktoken.Encoding, transformers.PreTrainedTokenizer, Chonkie.Tokenizer]"
     default="gpt2"
 >
-    Tokenizer to use. Can be a string identifier or a tokenizer instance
+    Tokenizer to use. Can be a string identifier or a tokenizer instance.
+    Passing in "character" will use the character tokenizer, and it will count each character as 1 token.
+    Passing in "word" will use the word tokenizer, and it will count each word as 1 token.
 </ParamField>
 
 <ParamField
@@ -56,79 +60,259 @@ chunker = TokenChunker(
 <ParamField
     path="chunk_overlap"
     type="Union[int, float]"
-    default="128"
+    default="0" 
 >
-    Number or percentage of overlapping tokens between chunks
+    Number or percentage of overlapping tokens between chunks.
+    If a float is passed, it will be interpreted as a percentage of the chunk size.
 </ParamField>
 
-## Usage
+<ParamField
+    path="return_type"
+    type="Literal['chunks', 'texts']"
+    default="chunks"
+>
+    Return type of the chunker; "chunks" or "texts".
+</ParamField>
 
-### Single Text Chunking
+## Methods
 
-```python
-text = "Some long text that needs to be chunked into smaller pieces..."
-chunks = chunker.chunk(text)
+### `__call__`
 
-for chunk in chunks:
-    print(f"Chunk text: {chunk.text}")
-    print(f"Token count: {chunk.token_count}")
-    print(f"Start index: {chunk.start_index}")
-    print(f"End index: {chunk.end_index}")
-```
+**Arguments:**
 
-### Batch Chunking
+<ParamField
+    path="text"
+    type="Union[str, List[str]]"
+    default="None"
+>
+    Text to chunk.
+</ParamField>
 
-```python
-texts = [
-    "First document to chunk...",
-    "Second document to chunk..."
-]
-batch_chunks = chunker.chunk_batch(texts)
+<ParamField
+    path="batch_size"
+    type="int"
+    default="1"
+>
+    Batch size for chunking.
+</ParamField>
 
-for doc_chunks in batch_chunks:
-    for chunk in doc_chunks:
-        print(f"Chunk: {chunk.text}")
-```
+<ParamField
+    path="show_progress_bar"
+    type="bool"
+    default="True"
+>
+    Whether to show a progress bar.
+</ParamField>
 
-### Using as a Callable
+**Returns:**
 
-```python
-# Single text
-chunks = chunker("Text to chunk...")
+<ParamField
+    path="Result"
+    type="Union[List[Chunk], List[str], List[List[Chunk]], List[List[str]]]"
+    default="None"
+>
+    List of chunks or texts.
+</ParamField>
 
-# Multiple texts
-batch_chunks = chunker(["Text 1...", "Text 2..."])
-```
+### `.chunk()`
 
-## Supported Tokenizers
+**Arguments:**
 
-TokenChunker supports multiple tokenizer backends:
+<ParamField
+    path="text"
+    type="str"
+    default="None"
+>
+    Text to chunk.
+</ParamField>
 
-- **TikToken** (Recommended)
-  ```python
-  import tiktoken
-  tokenizer = tiktoken.get_encoding("gpt2")
-  ```
+**Returns:**
 
-- **AutoTikTokenizer**
-  ```python
-  from autotiktokenizer import AutoTikTokenizer
-  tokenizer = AutoTikTokenizer.from_pretrained("gpt2")
-  ```
+<ParamField
+    path="Result"
+    type="Union[List[Chunk], List[str]]"
+    default="None"
+>
+    List of chunk objects or texts.
+</ParamField>
 
-- **Hugging Face Tokenizers**
-  ```python
-  from tokenizers import Tokenizer
-  tokenizer = Tokenizer.from_pretrained("gpt2")
-  ```
+### `.chunk_batch()`
 
-- **Transformers**
-  ```python
-  from transformers import AutoTokenizer
-  tokenizer = AutoTokenizer.from_pretrained("gpt2")
-  ```
+**Arguments:**
 
-## Return Type
+<ParamField
+    path="texts"
+    type="List[str]"
+    default="None"
+>
+    List of texts to chunk.
+</ParamField>
+
+<ParamField
+    path="batch_size"
+    type="int"
+    default="1"
+>
+    Batch size for chunking.
+</ParamField>
+
+<ParamField
+    path="show_progress_bar"
+    type="bool"
+    default="True"
+>
+    Whether to show a progress bar.
+</ParamField>
+
+**Returns:**
+
+<ParamField
+    path="Result"
+    type="Union[List[Chunk], List[str]]"
+    default="None"
+>
+    List of chunk objects or texts. 
+</ParamField>
+
+## Usage Examples
+
+<AccordionGroup>
+    <Accordion title="Basic Usage">
+        By default, you can initialize the chunker with the default tokenizer and chunk size. It should work for most use cases.
+
+        ```python
+        # Import the TokenChunker
+        from chonkie import TokenChunker
+
+        # Initialize the chunker
+        chunker = TokenChunker()
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using your own tokenizer">
+        You can also use a custom tokenizer by passing in a tokenizer instance.
+        
+        ```python
+        # Import the Tokenizer and TokenChunker
+        from tokenizers import Tokenizer
+        from chonkie import TokenChunker
+
+        # Initialize    
+        tokenizer = Tokenizer.from_pretrained("bert-base-uncased") # or any other tokenizer
+
+        # Initialize the chunker
+        chunker = TokenChunker(tokenizer=tokenizer)
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Batch Processing">
+        You can also process a batch of texts at once.
+        
+        ```python
+        # Import the TokenChunker
+        from chonkie import TokenChunker
+
+        # Initialize the chunker
+        chunker = TokenChunker()
+
+        # Chunk a batch of texts
+        # You can directly call the chunker OR use the `.chunk_batch()` method
+        batch_chunks = chunker(["Text 1", "Text 2", "Text 3"], show_progress_bar=True)
+        batch_chunks = chunker.chunk_batch(["Text 1", "Text 2", "Text 3"], show_progress_bar=False)
+
+        # Print the chunks
+        for chunks in batch_chunks:
+            for chunk in chunks:
+                print(chunk.text)
+                print(chunk.token_count)
+                print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using the character tokenizer">
+        You can also use the character tokenizer by passing in "character" in the `tokenizer` argument.
+        The character tokenizer counts each character as 1 token, effectively chunking the text with characters.
+       
+        ```python
+        # Import the TokenChunker
+        from chonkie import TokenChunker
+
+        # Initialize the chunker
+        chunker = TokenChunker(tokenizer="character")
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Using the word tokenizer">
+        You can also use the word tokenizer by passing in "word" in the `tokenizer` argument.
+        The word tokenizer counts each word as 1 token, effectively chunking the text with words.
+        
+        ```python
+        # Import the TokenChunker
+        from chonkie import TokenChunker
+
+        # Initialize the chunker
+        chunker = TokenChunker(tokenizer="word")
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+        ```
+    </Accordion>
+
+    <Accordion title="Getting texts instead of chunks">
+        You can also get texts instead of chunks by passing in "texts" in the `return_type` argument.
+        
+        ```python
+        # Import the TokenChunker
+        from chonkie import TokenChunker
+
+        # Initialize the chunker
+        chunker = TokenChunker(return_type="texts")
+
+        # Chunk a single text
+        chunks = chunker("Some long text that needs to be chunked into smaller pieces...")
+
+        # Print the chunks
+        for chunk in chunks:
+            print(chunk) # This will print the chunk text (str)
+        ```
+    </Accordion>
+</AccordionGroup>
+
+
+## Associated Return Types
 
 TokenChunker returns chunks as `Chunk` objects with the following attributes:
 
