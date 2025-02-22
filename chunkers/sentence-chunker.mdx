@@ -24,7 +24,7 @@ chunker = SentenceChunker(
     chunk_overlap=0,                                  # Overlap between chunks
     min_sentences_per_chunk=1,                        # Minimum sentences in each chunk
     min_characters_per_sentence=12,                   # Minimum characters per sentence
-    approximate=True,                                  # Use approximate token counting
+    approximate=True,                                 # Use approximate token counting
     include_delim="prev",                             # Include the delimiter in the chunk
     return_type="chunks"                              # Return Chunks or texts only 
 )
