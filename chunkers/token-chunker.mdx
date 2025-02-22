@@ -78,6 +78,8 @@ chunker = TokenChunker(
 
 ### `__call__`
 
+The `__call__` method allows you to call the chunker like a function, which uses the `.chunk` or `.chunk_batch` method internally, depending on the arguments passed.
+
 **Arguments:**
 
 <ParamField
@@ -114,7 +116,9 @@ chunker = TokenChunker(
     List of chunks or texts.
 </ParamField>
 
-### `.chunk()`
+### `.chunk`
+
+The `.chunk` method chunks a single text into chunks. 
 
 **Arguments:**
 
@@ -136,7 +140,9 @@ chunker = TokenChunker(
     List of chunk objects or texts.
 </ParamField>
 
-### `.chunk_batch()`
+### `.chunk_batch`
+
+The `.chunk_batch` method chunks a batch of texts into chunks. 
 
 **Arguments:**
 
