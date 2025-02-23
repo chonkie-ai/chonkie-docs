@@ -14,6 +14,9 @@ TokenChunker is included in the base installation of Chonkie. No additional depe
 
 ## Initialization
 
+Here's how to initialize the `TokenChunker` with the default parameters. 
+Have a look at the [Usage Examples](#usage-examples) section for more examples on how to use the chunker.
+
 ```python
 from chonkie import TokenChunker
 
@@ -23,16 +26,6 @@ chunker = TokenChunker(
     chunk_size=512,        # Maximum tokens per chunk
     chunk_overlap=0,       # Overlap between chunks
     return_type="chunks"   # Return type of the chunker; "chunks" or "texts"
-)
-
-# Using a custom tokenizer
-from tokenizers import Tokenizer
-custom_tokenizer = Tokenizer.from_pretrained("your-tokenizer")
-chunker = TokenChunker(
-    tokenizer=custom_tokenizer,
-    chunk_size=512,
-    chunk_overlap=0,
-    return_type="chunks"
 )
 ```
 
