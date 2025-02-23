@@ -190,13 +190,15 @@ class RecursiveLevel:
 
 You can pass in custom rules to the RecursiveChunker, or use the default rules. The default rules are designed to be a good starting point for most documents, but you can customize them to your needs.
 
-<Info> In `RecursiveLevel`, it is expected that only delimiters are provided, without whitespace as a delimiter.
- If whitespace is needed as a delimiter, you can use the `whitespace` parameter in the `RecursiveLevel` class, by setting it to `True`. Though, you cannot pass delimiters in this case.
-</Info>
+<Info> In `RecursiveLevel`, it is expected that only delimiters are provided, without whitespace as a delimiter. 
+If whitespace is needed as a delimiter, you can use the `whitespace` parameter in the `RecursiveLevel` class, by setting it to `True`. 
+Though, you cannot pass delimiters in this case. </Info>
+
 
 ## Usage Examples
 
 <AccordionGroup>
+
     <Accordion title="Basic Usage">
     Even with the default rules, the RecursiveChunker will do a good job at chunking the text.
 
@@ -221,6 +223,30 @@ You can pass in custom rules to the RecursiveChunker, or use the default rules. 
     ```
     </Accordion>
 
+    <Accordion title="Getting the texts instead of chunks">
+
+    You can get the texts instead of chunks by setting the `return_type` parameter to `"texts"`.
+    
+    ```python
+    # Import the RecursiveChunker
+    from chonkie import RecursiveChunker
+
+    # Initialize the chunker
+    chunker = RecursiveChunker(return_type="texts")
+
+    # Chunk a single text
+    text = """This is the first sentence. This is the second sentence. 
+    And here's a third one with some additional context."""
+
+    chunks = chunker(text)
+    chunks = chunker.chunk(text) # OR use the chunk method
+
+    for chunk in chunks:
+        print(chunk) # This will print the text instead of the chunk object
+    ```
+
+    </Accordion>
+    
     <Accordion title="Batch Chunking">
 
     The RecursiveChunker can also chunk a batch of texts at once.
@@ -284,7 +310,6 @@ You can pass in custom rules to the RecursiveChunker, or use the default rules. 
         print(chunk.token_count)
         print(f"{chunk.start_index} - {chunk.end_index}")
     ```
-
     </Accordion>
 
     <Accordion title="Using the character tokenizer">
@@ -334,6 +359,62 @@ You can pass in custom rules to the RecursiveChunker, or use the default rules. 
         print(f"{chunk.start_index} - {chunk.end_index}")
     ```
     </Accordion>    
+
+    <Accordion title="Using your own tokenizer">
+
+    You can also use your own tokenizer to chunk the text.
+
+    ```python
+    # Import the RecursiveChunker
+    from chonkie import RecursiveChunker
+    from transformers import AutoTokenizer
+
+    # Initialize the tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased") # or any other tokenizer
+
+    # Initialize the chunker
+    chunker = RecursiveChunker(tokenizer_or_token_counter=tokenizer)
+
+    # Chunk a single text
+    text = """This is the first sentence. This is the second sentence. 
+    And here's a third one with some additional context."""
+
+    chunks = chunker(text)
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+
+    <Accordion title="Using your own token counter">
+
+    You can also use your own token counter to chunk the text.
+
+    ```python
+    # Import the RecursiveChunker
+    from chonkie import RecursiveChunker
+
+    # Define your own token counter
+    def token_counter(text):
+        return len(text.split())
+
+    # Initialize the chunker
+    chunker = RecursiveChunker(tokenizer_or_token_counter=token_counter)
+
+    # Chunk a single text
+    text = """This is the first sentence. This is the second sentence. 
+    And here's a third one with some additional context."""
+
+    chunks = chunker(text)
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
 
 </AccordionGroup>
 
