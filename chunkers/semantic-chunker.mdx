@@ -18,15 +18,24 @@ pip install "chonkie[semantic]"
 
 ## Initialization
 
+Here's how to initialize the SemanticChunker with default parameters. In most cases, you can use the default parameters without any issues.
+
 ```python
 from chonkie import SemanticChunker
 
 # Basic initialization with default parameters
 chunker = SemanticChunker(
     embedding_model="minishlab/potion-base-8M",  # Default model
-    threshold=0.5,                               # Similarity threshold (0-1) or (1-100) or "auto"
+    mode="window",                               # Mode for grouping sentences, either "cumulative" or "window"
+    threshold="auto",                            # Similarity threshold (0-1) or (1-100) or "auto"
     chunk_size=512,                              # Maximum tokens per chunk
-    min_sentences=1                              # Initial sentences per chunk
+    similarity_window=1,                         # Number of sentences to consider while windowing for similarity
+    min_sentences=1                              # Minimum number of sentences per chunk
+    min_characters_per_sentence=12,              # Minimum number of characters per sentence
+    min_chunk_size=2,                            # Minimum tokens per chunk
+    threshold_step=0.01,                         # Step size for similarity threshold calculation
+    delim=['.', '!', '?', '\n']                  # Delimiters to split sentences on
+    return_type="chunks"                         # Return type, either "chunks" or "texts"
 )
 ```
 
@@ -46,6 +55,8 @@ chunker = SemanticChunker(
     default="window"
 >
     Mode for grouping sentences, either "cumulative" or "window"
+    Window mode will group sentences based on similarity within a window of sentences.
+    Cumulative dynamically adjusts the window size based on the similarity of the sentences, but will take longer to process. 
 </ParamField>
 
 <ParamField
@@ -68,7 +79,7 @@ chunker = SemanticChunker(
 
 <ParamField
     path="similarity_window"
-    type="int"
+    type="Optional[int]"
     default="1"
 >
     Number of sentences to consider for similarity threshold calculation
@@ -76,7 +87,7 @@ chunker = SemanticChunker(
 
 <ParamField
     path="min_sentences"
-    type="int"
+    type="Optional[int]"
     default="1"
 >
     Minimum number of sentences per chunk
@@ -84,7 +95,7 @@ chunker = SemanticChunker(
 
 <ParamField
     path="min_characters_per_sentence"
-    type="int"
+    type="Optional[int]"
     default="12"
 >
     Minimum number of characters per sentence
@@ -93,7 +104,7 @@ chunker = SemanticChunker(
 <ParamField
     path="min_chunk_size"
     type="Optional[int]"
-    default="None"
+    default="2"
 >
     Minimum tokens per chunk
 </ParamField>
@@ -114,45 +125,268 @@ chunker = SemanticChunker(
     Delimiters to split sentences on
 </ParamField>
 
-## Usage
+<ParamField
+    path="return_type"
+    type="Optional[str]"
+    default="chunks"
+>
+    Return type, either "chunks" or "texts"
+</ParamField>
 
-### Single Text Chunking
+## Methods
 
-```python
-text = """First paragraph about a specific topic.
-Second paragraph continuing the same topic.
-Third paragraph switching to a different topic.
-Fourth paragraph expanding on the new topic."""
+The SemanticChunker has the following methods:
 
-chunks = chunker.chunk(text)
+### `__call__`
 
-for chunk in chunks:
-    print(f"Chunk text: {chunk.text}")
-    print(f"Token count: {chunk.token_count}")
-    print(f"Number of sentences: {len(chunk.sentences)}")
-```
+The `__call__` method allows you to call the chunker like a function, which uses the `.chunk` or `.chunk_batch` method internally, depending on the arguments passed.
 
-### Batch Chunking
+**Arguments:** 
 
-```python
-texts = [
-    "First document about topic A...",
-    "Second document about topic B..."
-]
-batch_chunks = chunker.chunk_batch(texts)
+<ParamField
+    path="text"
+    type="Union[str, List[str]]"
+    default="None"
+>
+    Text to chunk.
+</ParamField>
 
-for doc_chunks in batch_chunks:
-    for chunk in doc_chunks:
-        print(f"Chunk: {chunk.text}")
-```
+<ParamField
+    path="show_progress_bar"
+    type="bool"
+    default="True"
+>
+    Whether to show a progress bar.
+</ParamField>
+
+**Returns:**
+
+<ParamField
+    path="Result"
+    type="Union[List[SemanticChunk], List[str], List[List[SemanticChunk]], List[List[str]]]"
+    default="None"
+>
+    Result of the chunking process.
+</ParamField>
+
+### `.chunk`
+
+The `.chunk` method chunks a single text into chunks.
+
+**Arguments:**
+
+<ParamField
+    path="text"
+    type="str"
+    default="None"
+>
+    Text to chunk.
+</ParamField>
+
+**Returns:**
+
+<ParamField
+    path="Result"
+    type="Union[List[SemanticChunk], List[str]]"
+    default="None"
+>
+    Result of the chunking process.
+</ParamField>
+
+### `.chunk_batch`
+
+The `.chunk_batch` method chunks a batch of texts into chunks.
+
+**Arguments:**
+
+<ParamField
+    path="texts"
+    type="List[str]"
+    default="None"
+>
+    List of texts to chunk.
+</ParamField>
+
+<ParamField
+    path="show_progress_bar"
+    type="bool"
+    default="True"
+>
+    Whether to show a progress bar.
+</ParamField>
+
+**Returns:**
+
+<ParamField
+    path="Result"
+    type="Union[List[List[SemanticChunk]], List[List[str]]]"
+    default="None"
+>
+    Result of the chunking process.
+</ParamField>
+
+## Usage Examples
+
+<AccordionGroup>
+
+    <Accordion title="Basic Usage">
+    Even with the default parameters, the SemanticChunker will do a good job at chunking the text.
+
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker 
+
+    # Initialize the chunker
+    chunker = SemanticChunker()
+
+    # Chunk a single text
+    text = """First paragraph about a specific topic.
+    Second paragraph continuing the same topic.
+    Third paragraph switching to a different topic.
+    Fourth paragraph expanding on the new topic."""
+
+    chunks = chunker(text)
+    chunks = chunker.chunk(text) # OR use the chunk method
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+
+    <Accordion title="Batch Chunking">
+
+    The SemanticChunker can also chunk a batch of texts at once.
+
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker
+
+    # Initialize the chunker   
+    chunker = SemanticChunker()
+
+    texts = [
+        "First text about a specific topic.",   
+        "Second text about a different topic.",
+        "Third text about a third topic."
+    ]
+
+    # Chunk the batch of texts
+    chunks = chunker(texts)
+    chunks = chunker.chunk_batch(texts) # OR use the chunk_batch method
+
+    for chunks in batch_chunks:
+        for chunk in chunks:
+            print(chunk.text)
+            print(chunk.token_count)
+            print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+
+    <Accordion title="Getting texts instead of chunks">
+    You can also get texts instead of chunks by passing in "texts" in the `return_type` argument.
+
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker
+
+    # Initialize the chunker
+    chunker = SemanticChunker(return_type="texts")
+
+    # Get your text
+    text = "Woah! Chonkie is a great library! I can't believe how easy it is to use. It's so much fun!"
+
+    # Chunk a single text
+    chunks = chunker(text)
+
+    # Print the chunks
+    for chunk in chunks:
+        print(chunk) # This will print the chunk text (str)
+    ```
+    </Accordion>
+    
+    <Accordion title="Using a custom embedding model">
+    You can also use a custom embedding model by passing in an embedding model instance or identifier.
+    
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker
+    from chonkie import AutoEmbeddings, SentenceTransformersEmbeddings
+
+    # Initialize the embedding model
+    embedding_model = AutoEmbeddings(model="all-minilm-l6-v2")
+    # OR
+    embedding_model = SentenceTransformersEmbeddings(model="all-minilm-l6-v2")
+
+    # Initialize the chunker
+    chunker = SemanticChunker(embedding_model=embedding_model)
+
+    # Chunk a single text
+    text = "Woah! Chonkie is a great library! I can't believe how easy it is to use. It's so much fun!"
+    chunks = chunker(text)
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+
+    <Accordion title="Using a custom threshold">
+    You can also use a custom threshold by passing in a float or int.
+
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker
+
+    # Initialize the chunker
+    chunker = SemanticChunker(threshold=0.5) # Set to value of 0.5 (0-1)
+    # OR
+    chunker = SemanticChunker(threshold=80) # Set to 80 percentile threshold (1-100)
+
+    # Chunk a single text
+    text = "Woah! Chonkie is a great library! I can't believe how easy it is to use. It's so much fun!"
+    chunks = chunker(text)
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+
+    <Accordion title="Using custom delimiters">
+    You can also use custom delimiters by passing in a list of delimiters.
+
+    ```python
+    # Import the SemanticChunker
+    from chonkie import SemanticChunker
+
+    # Initialize the chunker
+    chunker = SemanticChunker(delim=[".", "!", "?", "\n"])
+
+    # Chunk a single text
+    text = "Woah! Chonkie is a great library! I can't believe how easy it is to use. It's so much fun!"
+    chunks = chunker(text)
+
+    for chunk in chunks:
+        print(chunk.text)
+        print(chunk.token_count)
+        print(f"{chunk.start_index} - {chunk.end_index}")
+    ```
+    </Accordion>
+    
+</AccordionGroup>
+
 
 ## Supported Embeddings
 
 SemanticChunker supports multiple embedding providers through Chonkie's embedding system. See the [Embeddings Overview](/embeddings/overview) for more information.
 
-## Return Type
+## Associated Return Type
 
-SemanticChunker returns `SemanticChunk` objects with optimized storage using slots:
+SemanticChunker returns `SemanticChunk` objects:
 
 ```python
 @dataclass
@@ -162,8 +396,6 @@ class SemanticSentence(Sentence):
     end_index: int
     token_count: int
     embedding: Optional[np.ndarray]  # Sentence embedding vector
-    
-    __slots__ = ['embedding']  # Optimized memory usage
 
 @dataclass
 class SemanticChunk(SentenceChunk):
