@@ -73,7 +73,6 @@ Of course, we do a lot of optimizations under the hood to make sure that Chonkie
 - **Pipelining**: We use a pipelining approach to process the document, so as to make stronger heuristics for chunking. This allows to have a faster chunking process, without compromising on the quality of chunks.
 - **Caching and Pre-computation**: We cache the results of the chunking process, so as to avoid re-computation. This allows to have a faster chunking process, without compromising on the quality of chunks.
 - **Smart Token Estimate-Validate feedback Loops**: We use a token estimate-validate feedback loops to make sure that we have near optimal chunk sizes, while bypassing some of the inefficiencies of the tokenizers.
-- **Faster Tokenizers**: We use a faster tokenizer, [tiktoken](https://github.com/openai/tiktoken), which is faster and more efficient than the default tokenizer. Tiktoken by default does not support all model types, so we use a wrapper around it, AutoTikTokenizer which adds support for all HF models.
 - **Ultra-fast embedding**: By default, Chonkie uses Static Embeddings from Model2Vec, which are ultra-fast and lightweight. Static Embeddings are pre-computed and stored in a lookup table, so as to avoid the overhead of running an embedding model at query time.
 - **Parallel Processing**: We use parallel processing to process the document in parallel, so as to make better use of the available resources. This allows to have a faster chunking process, without compromising on the quality of chunks.
 
